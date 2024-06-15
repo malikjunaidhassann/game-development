@@ -1,0 +1,17 @@
+{
+  "name": "game-development",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "this is the backend for two games",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --es-module-specifier-resolution=node server",
+    "dev": "nodemon --exec \"npm start\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.3"
+  }
+}
