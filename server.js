@@ -9,7 +9,7 @@ import bodyParser from "body-parser";
 // const cors = require("cors");
 import cors from "cors";
 // const connectDB = require("./db/connect.db");
-import connectDB from "./db/connect.db";
+import connectDB from "./db/connect.db.js";
 // const userRoutes = require("./routes/user.route");
 // import userRoutes from "./routes/user.route";
 // const mongoose = require("mongoose");
