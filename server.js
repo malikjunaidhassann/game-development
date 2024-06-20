@@ -1,71 +1,21 @@
-// const express = require("express");
-import express from "express";
-// const dotenv = require("dotenv");
+import http from "http";
 import dotenv from "dotenv";
-// const morgan = require("morgan");
-import morgan from "morgan";
-// const bodyParser = require("body-parser");
-import bodyParser from "body-parser";
-// const cors = require("cors");
-import cors from "cors";
-// const connectDB = require("./db/connect.db");
+
+import app from "./app.js";
+import config from "./config.js";
 import connectDB from "./db/connect.db.js";
-// const userRoutes = require("./routes/user.route");
-// import userRoutes from "./routes/user.route";
-// const mongoose = require("mongoose");
-// import mongoose from "mongoose";
 
 dotenv.config();
 
-const app = express();
+const { port } = config;
 
-if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
-}
+app.set("port", port);
 
-app.use(bodyParser.json());
+const server = http.createServer(app);
 
-app.use(bodyParser.urlencoded({ extended: true }));
+server.listen(port, async () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server is listening on PORT ${port}`);
 
-const originWhitelist = "http://localhost:3000/";
-
-const corsOptions = {
-  optionsSuccessStatus: 200,
-  origin: (origin, callback) => {
-    if (originWhitelist.indexOf(origin) !== -1 || !origin) callback(null, true);
-    else callback(new Error("Not allowed by CORS"));
-  },
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors());
-app.get("/", (req, res) => {
-  res.json({ message: "Server is running" });
-});
-
-// app.use("/api/user", userRoutes);
-
-app.use((err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    return res.status(400).json({ error: err.message });
-  } else if (err) {
-    console.error(`Unexpected error: ${err.message}`);
-    return res.status(500).json({ error: "An unknown error occurred." });
-  }
-  next();
-});
-
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route Not Found" });
-});
-
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Internal Server Error" });
-});
-
-const PORT = process.env.PORT || 5713;
-app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}`);
   await connectDB();
 });
