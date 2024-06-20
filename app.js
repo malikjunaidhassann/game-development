@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 import compression from "compression";
 
 import config from "./config.js";
-// import apiRoutes from "./routes/api.routes";
+import apiRoutes from "./routes/api.routes.js";
 import exceptionHandler from "./middlewares/exception.middleware.js";
 import globalExceptionHandler from "./utils/globalErrorHandler.util.js";
 import IP from "./utils/ip.util.js";
@@ -77,7 +77,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use("/api", apiRoutes);
+app.use("/api", apiRoutes);
 
 app.use((_req, res) => res.status(404).json({ success: false, message: "Route Not Found" }));
 
