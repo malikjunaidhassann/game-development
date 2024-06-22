@@ -5,7 +5,7 @@ import ejs from "ejs";
 import path from "path";
 import nodemailer from "nodemailer";
 
-import config from "../config";
+import config from "../config.js";
 
 const Mailer = {
   async sendVerificationEmail({ email, name, code }) {
@@ -16,42 +16,21 @@ const Mailer = {
     return res;
   },
 
-  async sendPasswordResetEmail({ email, name, resetCode }) {
-    const options = { to: `"${name}" <${email}>`, subject: "Reset Password" };
-    const data = { name, link: `${config.appUrl}/reset-password?email=${email}&resetCode=${resetCode}` };
-    const res = await this.sendEmail({ file: "resetPassword", options, data });
+  //   async sendPasswordResetEmail({ email, name, resetCode }) {
+  //     const options = { to: `"${name}" <${email}>`, subject: "Reset Password" };
+  //     const data = { name, link: `${config.appUrl}/reset-password?email=${email}&resetCode=${resetCode}` };
+  //     const res = await this.sendEmail({ file: "resetPassword", options, data });
 
-    return res;
-  },
-  async sendInvitationEmail({ email, code, popupName, invitedBy, chefId, popupId, memberId, expiryDate }) {
-    const options = { to: `<${email}>`, subject: "View Invite" };
-    const data = {
-      code,
-      invitedBy,
-      popupName,
-      link: `${config.appUrl}/invite?email=${email}&popupName=${popupName}&code=${code}&invitedBy=${invitedBy}&chefId=${chefId}&popupId=${popupId}&memberId=${memberId}&expiryTime=${expiryDate}`,
-    };
-    const res = await this.sendEmail({ file: "sendInvite", options, data });
-
-    return res;
-  },
-
-  async sendGuestInvitationEmail({ email, popupName, reservationId }) {
-    const options = { to: `<${email}>`, subject: "Guest Invitation to Reservation" };
-    const data = { popupName, link: `${config.appUrl}/reservation/${reservationId}` };
-    const res = await this.sendEmail({ file: "sendGuestInvite", options, data });
-
-    return res;
-  },
-
+  //     return res;
+  //   },
   async sendEmail({ data = {}, options = {}, file }) {
     return new Promise((resolve) => {
       const { user, pass } = config.mailer;
       const templatePath = path.join(`views/${file}.view.ejs`);
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
-        port: 465,
-        secure: true,
+        port: 587,
+        secure: false,
         auth: { user, pass },
       });
 
@@ -61,9 +40,8 @@ const Mailer = {
           console.log("Error reading email template:", { err });
           return resolve([null, err]);
         }
-
         const html = ejs.render(template, data);
-        const mailOptions = { from: `"Noshly" <${user}>`, html, ...options };
+        const mailOptions = { from: `"Carrom" <${user}>`, html, ...options };
 
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) console.log("Error sending email:", { error });

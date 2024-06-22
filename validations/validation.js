@@ -1,8 +1,12 @@
 import Joi from "joi";
 
-import moment from "moment";
+// import moment from "moment";
 
-import config from "../config";
+// import config from "../config.";
+
+const types = {
+  pattern: "string.pattern.base",
+};
 
 const messages = {
   websiteRegex: "must be a valid uri",
@@ -28,8 +32,7 @@ const getAlpha = (max = 56) =>
     .messages({ [types.pattern]: messages.alpha });
 
 const schema = {
-  firstName: getAlpha(),
-  userName: getAlphaDescription(45),
+  userName: getAlpha(45),
   boolean: Joi.boolean().required(),
   string: Joi.string().required().trim(),
   email: Joi.string().email().min(5).max(64).required().trim(),
@@ -64,16 +67,16 @@ const Validation = {
     resetPassword: {
       body: Joi.object({
         email: schema.email,
-        resetCode: schema.code,
+        // resetCode: schema.code,
         password: schema.password,
         confirmPassword: schema.confirmPassword,
       }),
     },
-    verifyEmail: {
-      body: Joi.object({
-        code: schema.code,
-      }),
-    },
+    // verifyEmail: {
+    //   body: Joi.object({
+    //     code: schema.code,
+    //   }),
+    // },
   },
 };
 

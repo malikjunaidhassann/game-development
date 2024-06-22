@@ -6,7 +6,7 @@ import AuthController from "../../../controllers/auth.controller.js";
 const router = express.Router();
 
 router.post("/sign-up", [validate(Validation.auth.signUp)], AuthController.signUp);
-router.post("/sign-in", [validate(Validation.auth.signIn)], AuthController.signIn);
+// router.post("/sign-in", [validate(Validation.auth.signIn)], AuthController.signIn);
 
 const authRoutes = router;
 

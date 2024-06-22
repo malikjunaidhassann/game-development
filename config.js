@@ -13,12 +13,18 @@ const config = {
   port: process.env.PORT,
   env: process.env.NODE_ENV,
   characters: process.env.CHARACTERS,
+  originWhitelist: process.env.APP_URL,
 
   appUrl: process.env.APP_URL,
   baseUrl: process.env.BASE_URL,
 
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,
+
+  mailer: {
+    user: process.env.NODEMAILER_USER,
+    pass: process.env.NODEMAILER_PASS,
+  },
 };
 
 export default config;
