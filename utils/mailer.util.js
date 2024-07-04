@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
-
 import fs from "fs";
 import ejs from "ejs";
 import path from "path";
 import nodemailer from "nodemailer";
-
 import config from "../config.js";
 
 const Mailer = {

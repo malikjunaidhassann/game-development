@@ -18,6 +18,14 @@ const userSchema = new mongoose.Schema(
     emailVerificationCode: {
       type: String,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
