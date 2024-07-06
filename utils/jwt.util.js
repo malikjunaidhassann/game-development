@@ -2,7 +2,9 @@ import jwt from "jsonwebtoken";
 
 import config from "../config.js";
 
-const { jwtSecret, jwtExpiresIn } = config;
+// const { jwtSecret, jwtExpiresIn } = config;
+const jwtSecret = "secretofjwttttttt";
+const jwtExpiresIn = "7d";
 
 const JWT = {
   sign(payload) {
