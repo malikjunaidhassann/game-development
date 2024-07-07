@@ -109,9 +109,12 @@ const AuthController = {
       await User.findByIdAndUpdate(userId, { isBlocked: true });
     }
 
+    const data = await User.find();
+
     return res.status(200).json({
       success: true,
-      message: `User with ID ${userId} has been ${user.isBlocked ? "blocked" : "unblocked"}.`,
+      message: `User with userName ${user.userName} has been ${user.isBlocked ? "unblocked" : "blocked"}.`,
+      data,
     });
   },
 };
