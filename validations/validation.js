@@ -78,6 +78,18 @@ const Validation = {
     //   }),
     // },
   },
+  table: {
+    create: {
+      body: Joi.object({
+        tableName: Joi.string().required(),
+        entryFee: Joi.number().required(),
+        reward: Joi.array()
+          .items(Joi.number().min(Joi.ref("entryFee")).required())
+          .required(),
+        image: Joi.string().required(),
+      }),
+    },
+  },
 };
 
 export default Validation;
