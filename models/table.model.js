@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-import autoIncrement from "mongoose-sequence";
+import autoIncrementFactory from "mongoose-sequence";
+
+const autoIncrement = autoIncrementFactory(mongoose);
 
 const TableSchema = new mongoose.Schema(
   {
@@ -9,7 +11,6 @@ const TableSchema = new mongoose.Schema(
     },
     tableName: {
       type: String,
-      unique: true,
       required: true,
     },
     entryFee: {
@@ -26,7 +27,6 @@ const TableSchema = new mongoose.Schema(
         message: "Reward must be greater than or equal to the entry fee.",
       },
     },
-
     image: {
       type: String,
       required: true,

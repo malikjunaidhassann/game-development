@@ -83,9 +83,14 @@ const Validation = {
       body: Joi.object({
         tableName: Joi.string().required(),
         entryFee: Joi.number().required(),
-        reward: Joi.array()
-          .items(Joi.number().min(Joi.ref("entryFee")).required())
-          .required(),
+        reward: Joi.number()
+          .required()
+          .custom((value, helpers) => {
+            if (value < helpers.state.ancestors[0].entryFee) {
+              return helpers.message("Reward must be greater than or equal to the entry fee.");
+            }
+            return value;
+          }),
         image: Joi.string().required(),
       }),
     },

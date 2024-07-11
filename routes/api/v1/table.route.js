@@ -6,11 +6,9 @@ import TableController from "../../../controllers/table.controller.js";
 const router = express.Router();
 
 router.get("/getTable", TableController.getAllTable);
-router.post("/createTable", [validate(Validation.auth.signUp)], TableController.createTable);
-router.post("/editTable", [validate(Validation.auth.signUp)], TableController);
-router.post("/inActiveTable", [validate(Validation.auth.signIn)], TableController);
-
-router.post("/admin-signIn", [validate(Validation.auth.signIn)], TableController);
+router.post("/createTable", [validate(Validation.table.create)], TableController.createTable);
+router.patch("/editTable/:tableId", TableController.editTable);
+router.patch("/inActiveTable/:tableId", TableController.inActiveTable);
 
 const tableRoutes = router;
 
