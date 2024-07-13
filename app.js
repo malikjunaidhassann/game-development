@@ -17,8 +17,8 @@ import IP from "./utils/ip.util.js";
 
 const app = express();
 
-const { originWhitelist } = config;
-// const originWhitelist = "https://gamess-dashboard.netlify.app/";
+// const { originWhitelist } = config;
+const originWhitelist = "https://gamess-dashboard.netlify.app/";
 const corsOptions = {
   optionsSuccessStatus: 200,
   origin: (origin, callback) => {
