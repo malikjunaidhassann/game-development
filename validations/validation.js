@@ -91,7 +91,7 @@ const Validation = {
             }
             return value;
           }),
-        image: Joi.string().required(),
+        // image: Joi.string().required(),
       }),
     },
   },

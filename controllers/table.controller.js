@@ -30,7 +30,7 @@ const TableController = {
       return res.status(401).json({ success: false, message: "Table not found." });
     }
 
-    const filter = { _id: tableId, inactive: false };
+    const filter = { _id: tableId };
     const update = {
       $set: {
         tableName,
@@ -76,6 +76,7 @@ const TableController = {
     return res.status(200).json({
       success: true,
       message: `${table.inactive ? "Table has been activated" : "Table has been inactivated"}`,
+      data: updatedTable,
     });
   },
 };
