@@ -18,7 +18,7 @@ import IP from "./utils/ip.util.js";
 const app = express();
 
 // const { originWhitelist } = config;
-const originWhitelist = "https://api.realbdgame.com/";
+const originWhitelist = "https://realbdgame.com/";
 
 const corsOptions = {
   optionsSuccessStatus: 200,
