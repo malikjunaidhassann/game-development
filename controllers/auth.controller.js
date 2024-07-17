@@ -5,16 +5,20 @@ import Bcrypt from "../utils/bcrypt.util.js";
 import User from "../models/user.model.js";
 import Admin from "../models/superAdmin.model.js";
 
+import s3Service from '../services/s3Service.js';
 import jwt from "jsonwebtoken";
 
 const AuthController = {
   async signUp(req, res) {
     const { email, userName, password } = req.bodyValue;
+    const { file } = req;
     const existingProfileByEmail = await User.findOne({ email, isDeleted: false });
 
     if (existingProfileByEmail)
+    {
+      await s3Service.deleteFile(file?.key);
       return res.status(400).json({ success: false, message: "Email already exists." });
-
+    }
     const emailVerificationCode = Nano.getCode({});
     const hashedPassword = await Bcrypt.getHash({ data: password });
     const user = await User.create({
@@ -22,6 +26,7 @@ const AuthController = {
       email,
       emailVerificationCode,
       password: hashedPassword,
+      profile: file?.key || ''
     });
 
     const token = JWT.sign({ _id: user._id });
@@ -47,7 +52,6 @@ const AuthController = {
     }
 
     const passwordValid = await Bcrypt.compare(password, user.password);
-    console.log("Password valid:", passwordValid);
 
     if (!passwordValid) {
       console.log("Incorrect password");
@@ -73,7 +77,6 @@ const AuthController = {
     }
 
     const passwordValid = await Bcrypt.compare(password, user.password);
-    console.log("Password valid:", passwordValid);
 
     if (!passwordValid) {
       console.log("Incorrect password");
@@ -82,6 +85,9 @@ const AuthController = {
     const token = JWT.sign({ _id: user._id });
     const data = user.toObject();
     delete data.password;
+
+    const profile = await s3Service.getObjectURL(user.profile);
+    data.profile = profile;
 
     return res.status(200).json({
       success: true,

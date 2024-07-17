@@ -15,6 +15,9 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
+    profile: {
+      type: String
+    },
     emailVerificationCode: {
       type: String,
     },
