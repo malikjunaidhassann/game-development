@@ -14,8 +14,6 @@ app.set("port", port);
 const server = http.createServer(app);
 
 server.listen(port, async () => {
-  // eslint-disable-next-line no-console
   console.log(`Server is listening on PORT ${port}`);
-
   await connectDB();
 });

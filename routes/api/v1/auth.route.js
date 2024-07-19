@@ -8,7 +8,11 @@ const router = express.Router();
 
 router.get("/getCarromUser", AuthController.getCarromUser);
 router.post("/changeBlockStatus/:userId", AuthController.blockUser);
-router.post("/sign-up", [s3Service.uploadS3({}).single("profile-image"), validate(Validation.auth.signUp)], AuthController.signUp);
+router.post(
+  "/sign-up",
+  [s3Service.uploadS3({}).single("profile-image"), validate(Validation.auth.signUp)],
+  AuthController.signUp
+);
 router.post("/sign-in", [validate(Validation.auth.signIn)], AuthController.signIn);
 
 router.post("/admin-signIn", [validate(Validation.auth.signIn)], AuthController.superAdminSignIn);

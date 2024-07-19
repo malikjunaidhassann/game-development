@@ -28,7 +28,6 @@ const getAlpha = (max = 56) =>
     .max(max)
     .required()
     .trim()
-    .pattern(regex.alpha)
     .messages({ [types.pattern]: messages.alpha });
 
 const schema = {
@@ -36,8 +35,11 @@ const schema = {
   boolean: Joi.boolean().required(),
   string: Joi.string().required().trim(),
   email: Joi.string().email().min(5).max(64).required().trim(),
-  confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+  confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+    "any.only": "Password must match",
+  }),
   password: Joi.string().min(6).max(30).required(),
+  profilePicture: Joi.any().required(),
   // .pattern(regex.password)
   // .messages({ [types.pattern]: messages.password }),
 };
@@ -50,6 +52,7 @@ const Validation = {
         password: schema.password,
         confirmPassword: schema.confirmPassword,
         userName: schema.userName,
+        profilePicture: schema.profilePicture,
       }),
     },
     signIn: {
