@@ -33,7 +33,7 @@ const storageS3 = (folder) =>
     multerS3({
         s3: s3Client,
         bucket,
-        acl: "private",
+        acl: "public-read",
         contentDisposition: "inline",
         contentType: multerS3.AUTO_CONTENT_TYPE,
         metadata: (_req, file, cb) => cb(null, { fieldName: file.fieldname }),
@@ -53,20 +53,20 @@ const s3Service = {
         return multer({ storage: storageS3(folder), fileFilter: fileFilter(allowedTypes), limits });
     },
 
-    async getObjectURL(key) {
-        const command = new GetObjectCommand({
-            Bucket: bucket,
-            Key: key
-        });
+    // async getObjectURL(key) {
+    //     const command = new GetObjectCommand({
+    //         Bucket: bucket,
+    //         Key: key
+    //     });
 
-        try {
-            const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-            return url;
-        } catch (error) {
-            console.error("Error generating presigned URL:", error);
-            throw error;
-        }
-    },
+    //     try {
+    //         const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+    //         return url;
+    //     } catch (error) {
+    //         console.error("Error generating presigned URL:", error);
+    //         throw error;
+    //     }
+    // },
 
     async deleteFile(key) {
         if (!key) return;

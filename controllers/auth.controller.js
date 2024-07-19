@@ -12,6 +12,7 @@ const AuthController = {
   async signUp(req, res) {
     const { email, userName, password } = req.bodyValue;
     const { file } = req;
+    console.log("file:", file);
     const existingProfileByEmail = await User.findOne({ email, isDeleted: false });
 
     if (existingProfileByEmail)
@@ -26,7 +27,7 @@ const AuthController = {
       email,
       emailVerificationCode,
       password: hashedPassword,
-      profile: file?.key || ''
+      profile: file?.location || ''
     });
 
     const token = JWT.sign({ _id: user._id });
@@ -85,9 +86,6 @@ const AuthController = {
     const token = JWT.sign({ _id: user._id });
     const data = user.toObject();
     delete data.password;
-
-    const profile = await s3Service.getObjectURL(user.profile);
-    data.profile = profile;
 
     return res.status(200).json({
       success: true,
