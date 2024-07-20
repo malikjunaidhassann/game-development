@@ -13,14 +13,16 @@ const messages = {
   zipCode: "Must be a valid US Zip Code.",
   alpha: "{#label} can only contain letters and spaces",
   password: "{#label} can only contain letters and numbers",
-  alphaDescription: "{#label} can only contain letters, numbers, spaces and special characters (’'\".,&-@)",
+  alphaDescription:
+    "{#label} can only contain letters, numbers, spaces and special characters (’'\".,&-@)",
 };
 const regex = {
   alpha: /^[A-Za-z ]+$/,
   password: /^[a-zA-Z0-9]+$/,
   description: /^[A-Za-z0-9’'".,&-@ ]+$/,
   zipCode: /(^\d{5}$)|(^\d{5}-\d{4}$)/,
-  websiteRegex: /^(?:https?:\/\/)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[^\s]*)?$/,
+  websiteRegex:
+    /^(?:https?:\/\/)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[^\s]*)?$/,
 };
 
 const getAlpha = (max = 56) =>
@@ -58,7 +60,6 @@ const Validation = {
         password: schema.password,
       }),
     },
-
     forgotPassword: {
       body: Joi.object({
         email: schema.email,
@@ -67,9 +68,11 @@ const Validation = {
     resetPassword: {
       body: Joi.object({
         email: schema.email,
-        // resetCode: schema.code,
+        resetCode: Joi.string()
+          .length(6)
+          .pattern(/^[0-9]+$/)
+          .required(),
         password: schema.password,
-        confirmPassword: schema.confirmPassword,
       }),
     },
     // verifyEmail: {
@@ -87,7 +90,9 @@ const Validation = {
           .required()
           .custom((value, helpers) => {
             if (value < helpers.state.ancestors[0].entryFee) {
-              return helpers.message("Reward must be greater than or equal to the entry fee.");
+              return helpers.message(
+                "Reward must be greater than or equal to the entry fee."
+              );
             }
             return value;
           }),
