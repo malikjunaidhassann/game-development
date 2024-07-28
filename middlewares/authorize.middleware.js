@@ -1,41 +1,35 @@
-import jwt from "jsonwebtoken";
-
-import config from "../config.js";
+import JWT from "../utils/jwt.util.js";
 import User from "../models/user.model.js";
-const jwtSecret = config.jwtSecret;
 
-const authorize = async (req, res, next) => {
-  const authHeader = req?.header("Authorization");
+function authorize(model = "user") {
+  return async (req, res, next) => {
+    const status = 401;
+    const success = false;
+    const token = req.header("Authorization");
 
-  if (!authHeader) {
-    return res
-      ?.status(401)
-      .json({ message: "Access Denied: No Token Provided!" });
-  }
+    if (!token) return res.status(status).json({ success, message: "No token provided." });
 
-  const token = authHeader.split(" ")[1];
+    try {
+      const decoded = JWT.verify(token);
+      // eslint-disable-next-line no-nested-ternary
+      const Model = User;
+      const query = { _id: decoded?._id, isDeleted: false };
+      const user = await Model.findOne(query);
 
-  if (!token) {
-    return res
-      ?.status(401)
-      .json({ message: "Access Denied: Token Malformed!" });
-  }
+      if (!user) return res.status(status).json({ success, message: "Invalid token." });
 
-  try {
-    const decoded = jwt.verify(token, jwtSecret);
+      req[`${model}`] = user;
 
-    const user = await User.findById({ _id: decoded._id, isBlocked: false });
-
-    if (!user) {
-      return res?.status(400).json({ message: "No User Found" });
+      return next();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+      return res.status(status).json({ success, message: `${error.name}: ${error.message}.` });
     }
-
-    req.user = user;
-
-    next();
-  } catch (err) {
-    return res?.status(400).json({ message: err.message });
-  }
-};
+  };
+}
 
 export default authorize;
+
+export const guestAuthorize = () => authorize("guest");
+export const adminAuthorize = () => authorize("admin");
