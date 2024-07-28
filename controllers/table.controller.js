@@ -10,12 +10,14 @@ const TableController = {
     });
   },
   async createTable(req, res) {
-    const { tableName, entryFee, reward, image } = req.bodyValue;
+    const { tableName, entryFee, reward } = req.bodyValue;
+    const { file } = req;
+    
     const createdTable = await Table.create({
       tableName,
       entryFee,
       reward,
-      image,
+      image: file.location,
     });
     return res.status(201).json({
       success: true,
