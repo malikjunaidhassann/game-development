@@ -6,7 +6,6 @@ import User from "../models/user.model.js";
 import Admin from "../models/superAdmin.model.js";
 
 import s3Service from "../services/s3Service.js";
-import jwt from "jsonwebtoken";
 
 const AuthController = {
   async signUp(req, res) {
@@ -77,13 +76,11 @@ const AuthController = {
     const data = user.toObject();
     delete data.emailVerificationCode;
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        user: data,
-        message: "Email successfully verified.",
-      });
+    return res.status(200).json({
+      success: true,
+      user: data,
+      message: "Email successfully verified.",
+    });
   },
   async superAdminSignIn(req, res) {
     const { email, password } = req.body;
