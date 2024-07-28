@@ -27,10 +27,10 @@ const TableSchema = new mongoose.Schema(
         message: "Reward must be greater than or equal to the entry fee.",
       },
     },
-    // image: {
-    //   type: String,
-    //   required: true,
-    // },
+    image: {
+      type: String,
+      required: true,
+    },
     inactive: {
       type: Boolean,
       default: false,
