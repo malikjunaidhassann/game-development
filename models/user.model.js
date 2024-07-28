@@ -16,9 +16,12 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     profile: {
-      type: String
+      type: String,
     },
     emailVerificationCode: {
+      type: String,
+    },
+    resetCode: {
       type: String,
     },
     isBlocked: {
