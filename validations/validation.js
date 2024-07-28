@@ -103,6 +103,19 @@ const Validation = {
       }),
     },
   },
+  payment: {
+    createPayment: {
+      body: Joi.object({
+        amount: schema.string.required(),
+      }),
+    },
+    updateStatus: {
+      body: Joi.object({
+        status: Joi.string().required(),
+        paymentID: Joi.string().required(),
+      }),
+    },
+  },
 };
 
 export default Validation;

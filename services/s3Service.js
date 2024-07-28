@@ -1,5 +1,4 @@
 import { S3Client, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import config from "../config.js";
@@ -34,7 +33,6 @@ const storageS3 = (folder) =>
   multerS3({
     s3: s3Client,
     bucket,
-    acl: "private",
     contentDisposition: "inline",
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (_req, file, cb) => cb(null, { fieldName: file.fieldname }),
@@ -51,22 +49,11 @@ const s3Service = {
     allowedTypes = ["image/jpeg", "image/png", "image/jpg"],
   }) {
     const limits = { fileSize: 1024 * 1024 * maxSize };
-    return multer({ storage: storageS3(folder), fileFilter: fileFilter(allowedTypes), limits });
-  },
-
-  async getObjectURL(key) {
-    const command = new GetObjectCommand({
-      Bucket: bucket,
-      Key: key,
+    return multer({
+      storage: storageS3(folder),
+      fileFilter: fileFilter(allowedTypes),
+      limits,
     });
-
-    try {
-      const url = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-      return url;
-    } catch (error) {
-      console.error("Error generating presigned URL:", error);
-      throw error;
-    }
   },
 
   async deleteFile(key) {

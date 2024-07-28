@@ -14,9 +14,16 @@ const config = {
   env: process.env.NODE_ENV,
   characters: process.env.CHARACTERS,
   originWhitelist: process.env.APP_URL,
-  
+
   appUrl: process.env.APP_URL,
   baseUrl: process.env.BASE_URL,
+
+  baseURL: process.env.BASE_URL,
+  bkash_user: process.env.BKASH_USER,
+  bkash_password: process.env.BKASH_PASSWORD,
+  app_key: process.env.APP_KEY,
+  app_secret: process.env.APP_SECRET,
+  callbackURL: process.env.CALLBACK_URL,
 
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN,
@@ -28,7 +35,7 @@ const config = {
 
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.REGION
+  region: process.env.REGION,
 };
 
 export default config;
