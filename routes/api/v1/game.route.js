@@ -12,11 +12,11 @@ router.post(
   GameController.startGame
 );
 
-// router.post(
-//   "/update-status",
-//   [authorize, validate(Validation.payment.updateStatus)],
-//   PaymentController.updateStatus
-// );
+router.post(
+  "/update",
+  [authorize(), validate(Validation.game.updateGameStatus)],
+  GameController.updateGameStatus
+);
 
 const gameRoutes = router;
 
