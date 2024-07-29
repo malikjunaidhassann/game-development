@@ -14,7 +14,7 @@ const gameHistorySchema = new mongoose.Schema(
     },
     gameStatus: {
       type: String,
-      enum: ["in-progress", "completed"],
+      enum: ["in-progress", "no-result", "completed"],
     },
     gameCoins: {
       type: String,
@@ -22,6 +22,7 @@ const gameHistorySchema = new mongoose.Schema(
     gameResult: {
       status: {
         type: String,
+        enum: ["win", "lose"],
       },
       coins: {
         type: String,

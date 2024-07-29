@@ -127,6 +127,18 @@ const Validation = {
         gameCoins: Joi.string().required(),
       }),
     },
+    updateGameStatus: {
+      body: Joi.object({
+        gameId: Joi.string().required(),
+        gameStatus: Joi.string()
+          .valid("in-progress", "no-result", "completed")
+          .required(),
+        gameResult: Joi.object({
+          status: Joi.string().valid("win", "lose").required(),
+          coins: Joi.string().required(),
+        }),
+      }),
+    },
   },
 };
 
