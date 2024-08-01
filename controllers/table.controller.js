@@ -1,4 +1,4 @@
-import Table from "../models/table.model.js";
+import { Table } from "../models/table.model.js";
 
 const TableController = {
   async getAllTable(_, res) {
@@ -12,7 +12,7 @@ const TableController = {
   async createTable(req, res) {
     const { tableName, entryFee, reward } = req.bodyValue;
     const { file } = req;
-    
+
     const createdTable = await Table.create({
       tableName,
       entryFee,
@@ -26,28 +26,49 @@ const TableController = {
   },
   async editTable(req, res) {
     let tableId = req.params.tableId;
-    const { tableName, entryFee, reward, image } = req.body;
+    const { entryFee, reward } = req.body;
+    const file = req.file;
+
     const table = await Table.findById(tableId);
     if (!table) {
       return res.status(401).json({ success: false, message: "Table not found." });
     }
 
-    const filter = { _id: tableId };
     const update = {
-      $set: {
-        tableName,
-        entryFee,
-        reward,
-        image,
-      },
+      $set: {},
     };
+
+    if (file && file.location) {
+      update.$set.image = file.location;
+    } else {
+      update.$set.image = table.image; // Preserve the existing image URL
+    }
+
+    if (entryFee !== undefined) {
+      update.$set.entryFee = entryFee;
+    }
+
+    if (reward !== undefined) {
+      update.$set.reward = reward;
+    }
+
     const options = { new: true };
 
-    const updatedTable = await Table.findOneAndUpdate(filter, update, options);
+    try {
+      const updatedTable = await Table.findOneAndUpdate({ _id: tableId }, update, options);
 
-    if (!updatedTable) return res.status(404).json({ success: false, message: "Table does not exists." });
+      if (!updatedTable) {
+        return res.status(404).json({ success: false, message: "Table does not exist." });
+      }
 
-    return res.status(200).json({ success: true, data: updatedTable });
+      return res.status(200).json({ success: true, data: updatedTable });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "An error occurred while updating the table.",
+        error: error.message,
+      });
+    }
   },
   async inActiveTable(req, res) {
     let tableId = req.params.tableId;
