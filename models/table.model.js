@@ -39,35 +39,25 @@ const TableSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const TournamentSchema = new mongoose.Schema(
+const tournamentSchema = new mongoose.Schema(
   {
-    tableNo: {
-      type: Number,
-      unique: true,
-    },
-    tableName: {
+    name: {
       type: String,
       required: true,
     },
-    entryFee: {
-      type: Number,
+    tableId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Table",
+    },
+    startDate: {
+      type: Date,
       required: true,
     },
-    reward: {
-      type: Number,
-      required: true,
-      validate: {
-        validator: function (value) {
-          return value >= this.entryFee;
-        },
-        message: "Reward must be greater than or equal to the entry fee.",
-      },
-    },
-    image: {
-      type: String,
+    endDate: {
+      type: Date,
       required: true,
     },
-    inactive: {
+    isExpired: {
       type: Boolean,
       default: false,
     },
@@ -75,7 +65,7 @@ const TournamentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Tournament = mongoose.model("Tournament", TournamentSchema);
+const Tournament = mongoose.model("Tournament", tournamentSchema);
 
 TableSchema.plugin(autoIncrement, { inc_field: "tableNo" });
 

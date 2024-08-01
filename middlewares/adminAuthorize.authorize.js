@@ -1,11 +1,14 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 import User from "../models/user.model.js";
+import Admin from "../models/superAdmin.model.js";
 
 const jwtSecret = config.jwtSecret;
 
-function authorize(model = "user") {
+function adminAuthorize(model = "user") {
+  console.log("Authorize function called with model:", model);
   return async (req, res, next) => {
+    console.log("Middleware executed with model:", model);
     const authHeader = req?.header("Authorization");
 
     if (!authHeader) {
@@ -20,8 +23,10 @@ function authorize(model = "user") {
 
     try {
       const decoded = jwt.verify(token, jwtSecret);
+      console.log("Decoded token:", decoded);
 
-      const user = await User.findById(decoded._id);
+      const user = await Admin.findById({ _id: decoded._id });
+      console.log("Admin found:", user);
 
       if (!user) {
         return res?.status(400).json({ message: "No User Found" });
@@ -36,6 +41,6 @@ function authorize(model = "user") {
   };
 }
 
-export default authorize;
+export default adminAuthorize;
 
-// export const adminAuthorize = () => authorize("admin");
+// export const adminadminAuthorize = () => adminAuthorize("admin");

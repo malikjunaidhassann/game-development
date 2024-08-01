@@ -17,3 +17,5 @@ server.listen(port, async () => {
   console.log(`Server is listening on PORT ${port}`);
   await connectDB();
 });
+
+
