@@ -4,7 +4,6 @@ import multerS3 from "multer-s3";
 import config from "../config.js";
 
 const { accessKeyId, secretAccessKey, region, characters } = config;
-console.log({ accessKeyId, secretAccessKey, region, characters });
 
 const s3Client = new S3Client({
   region,

@@ -13,14 +13,16 @@ const messages = {
   zipCode: "Must be a valid US Zip Code.",
   alpha: "{#label} can only contain letters and spaces",
   password: "{#label} can only contain letters and numbers",
-  alphaDescription: "{#label} can only contain letters, numbers, spaces and special characters (’'\".,&-@)",
+  alphaDescription:
+    "{#label} can only contain letters, numbers, spaces and special characters (’'\".,&-@)",
 };
 const regex = {
   alpha: /^[A-Za-z ]+$/,
   password: /^[a-zA-Z0-9]+$/,
   description: /^[A-Za-z0-9’'".,&-@ ]+$/,
   zipCode: /(^\d{5}$)|(^\d{5}-\d{4}$)/,
-  websiteRegex: /^(?:https?:\/\/)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[^\s]*)?$/,
+  websiteRegex:
+    /^(?:https?:\/\/)?(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:\/[^\s]*)?$/,
 };
 
 const getAlpha = (max = 56) =>
@@ -95,7 +97,9 @@ const Validation = {
           .required()
           .custom((value, helpers) => {
             if (value < helpers.state.ancestors[0].entryFee) {
-              return helpers.message("Reward must be greater than or equal to the entry fee.");
+              return helpers.message(
+                "Reward must be greater than or equal to the entry fee."
+              );
             }
             return value;
           }),
@@ -113,6 +117,26 @@ const Validation = {
       body: Joi.object({
         status: Joi.string().required(),
         paymentID: Joi.string().required(),
+      }),
+    },
+  },
+  game: {
+    startGame: {
+      body: Joi.object({
+        tableId: Joi.string().required(),
+        gameCoins: Joi.string().required(),
+      }),
+    },
+    updateGameStatus: {
+      body: Joi.object({
+        gameId: Joi.string().required(),
+        gameStatus: Joi.string()
+          .valid("in-progress", "no-result", "completed")
+          .required(),
+        gameResult: Joi.object({
+          status: Joi.string().valid("win", "lose").required(),
+          coins: Joi.string().required(),
+        }),
       }),
     },
   },

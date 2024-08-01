@@ -8,13 +8,13 @@ const router = express.Router();
 
 router.post(
   "/get-intent",
-  [authorize, validate(Validation.payment.createPayment)],
+  [authorize(), validate(Validation.payment.createPayment)],
   PaymentController.getPaymentIntent
 );
 
 router.post(
   "/update-status",
-  [authorize, validate(Validation.payment.updateStatus)],
+  [authorize(), validate(Validation.payment.updateStatus)],
   PaymentController.updateStatus
 );
 
