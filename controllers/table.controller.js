@@ -26,7 +26,7 @@ const TableController = {
   },
   async editTable(req, res) {
     let tableId = req.params.tableId;
-    const { entryFee, reward } = req.body;
+    const { tableName, entryFee, reward } = req.body;
     const file = req.file;
 
     const table = await Table.findById(tableId);
@@ -46,6 +46,10 @@ const TableController = {
 
     if (entryFee !== undefined) {
       update.$set.entryFee = entryFee;
+    }
+
+    if (tableName !== undefined) {
+      update.$set.tableName = tableName;
     }
 
     if (reward !== undefined) {
