@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const TableController = {
   async getAllTable(_, res) {
-    const table = await Table.find();
+    const table = await Tournament.find();
 
     return res.status(200).json({
       success: true,
