@@ -18,9 +18,7 @@ const AuthController = {
 
     if (existingProfileByEmail) {
       await s3Service.deleteFile(file?.key);
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already exists." });
+      return res.status(400).json({ success: false, message: "Email already exists." });
     }
     const emailVerificationCode = Nano.getCode({});
     const hashedPassword = await Bcrypt.getHash({ data: password });
@@ -53,19 +51,12 @@ const AuthController = {
   async verifyEmail(req, res) {
     const { _id } = req.user;
     const { code } = req.bodyValue;
-    const user = await User.findOne({ _id, isDeleted: false }).select([
-      "+emailVerificationCode",
-    ]);
+    const user = await User.findOne({ _id, isDeleted: false }).select(["+emailVerificationCode"]);
 
-    if (!user)
-      return res
-        .status(404)
-        .json({ success: false, message: "user does not exists." });
+    if (!user) return res.status(404).json({ success: false, message: "user does not exists." });
 
     if (user.isEmailVerified)
-      return res
-        .status(400)
-        .json({ success: false, message: "Email already verified.", user });
+      return res.status(400).json({ success: false, message: "Email already verified.", user });
 
     if (user.emailVerificationCode !== code)
       return res.status(400).json({ success: false, message: "Invalid code." });
@@ -87,17 +78,13 @@ const AuthController = {
     const user = await Admin.findOne({ email }).select("+password");
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Email does not exist." });
+      return res.status(404).json({ success: false, message: "Email does not exist." });
     }
 
     const passwordValid = await Bcrypt.compare(password, user.password);
 
     if (!passwordValid) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect password." });
+      return res.status(400).json({ success: false, message: "Incorrect password." });
     }
     const token = JWT.sign({ _id: user._id });
     const data = user.toObject();
@@ -112,22 +99,16 @@ const AuthController = {
 
   async signIn(req, res) {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, isDeleted: false }).select(
-      "+password"
-    );
+    const user = await User.findOne({ email, isDeleted: false }).select("+password").select("+isEmailVerified");
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User Does Not Exist." });
+      return res.status(404).json({ success: false, message: "User Does Not Exist." });
     }
 
     const passwordValid = await Bcrypt.compare(password, user.password);
 
     if (!passwordValid) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect Password." });
+      return res.status(400).json({ success: false, message: "Incorrect Password." });
     }
     const token = JWT.sign({ _id: user._id });
     const data = user.toObject();
@@ -145,9 +126,7 @@ const AuthController = {
     const user = await User.findOne({ email, isDeleted: false });
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User Does Not Exist." });
+      return res.status(404).json({ success: false, message: "User Does Not Exist." });
     }
 
     const resetCode = Nano.getCode({});
@@ -172,15 +151,11 @@ const AuthController = {
     const user = await User.findOne({ email, isDeleted: false });
 
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User Does Not Exist." });
+      return res.status(404).json({ success: false, message: "User Does Not Exist." });
     }
 
     if (user.resetCode !== resetCode) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Invalid Reset Code." });
+      return res.status(404).json({ success: false, message: "Invalid Reset Code." });
     }
 
     const hashedPassword = await Bcrypt.getHash({ data: password });
@@ -205,9 +180,7 @@ const AuthController = {
     const { userId } = req.params;
     const user = await User.findById(userId);
     if (!user) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found." });
+      return res.status(404).json({ success: false, message: "User not found." });
     }
 
     if (user.isBlocked) {
@@ -220,9 +193,7 @@ const AuthController = {
 
     return res.status(200).json({
       success: true,
-      message: `User with userName ${user.userName} has been ${
-        user.isBlocked ? "unblocked" : "blocked"
-      }.`,
+      message: `User with userName ${user.userName} has been ${user.isBlocked ? "unblocked" : "blocked"}.`,
       data,
     });
   },

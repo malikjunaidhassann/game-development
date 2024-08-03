@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import app from "./app.js";
 import config from "./config.js";
 import connectDB from "./db/connect.db.js";
+import { startCronJob } from "./utils/cron.js";
 
 dotenv.config();
 
@@ -16,6 +17,5 @@ const server = http.createServer(app);
 server.listen(port, async () => {
   console.log(`Server is listening on PORT ${port}`);
   await connectDB();
+  // startCronJob();
 });
-
-
