@@ -42,6 +42,7 @@ const bKashService = {
     token,
     userId,
     amount,
+    InvoiceCount,
     currency = "BDT",
     intent = "sale",
   }) {
@@ -53,7 +54,7 @@ const bKashService = {
         amount,
         currency,
         intent,
-        merchantInvoiceNumber: userId,
+        merchantInvoiceNumber: `INV-${InvoiceCount + 1}`,
       };
 
       const config = {
@@ -71,6 +72,65 @@ const bKashService = {
         requestData,
         config
       );
+      return [response.data, null];
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      return [null, error];
+    }
+  },
+
+  async checkBalance({ token }) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "x-app-key": app_key,
+          authorization: token,
+        },
+      };
+
+      const response = await axios.get(
+        `${baseURL}/checkout/payment/organizationBalance`,
+        config
+      );
+
+      console.log(response.data);
+      return [response.data, null];
+    } catch (error) {
+      console.error("Error creating payment:", error);
+      return [null, error];
+    }
+  },
+
+  async createDisburse({
+    token,
+    amount,
+    InvoiceCount,
+    currency = "BDT",
+    receiverMSISDN,
+  }) {
+    try {
+      const requestData = {
+        amount,
+        currency,
+        receiverMSISDN,
+        merchantInvoiceNumber: `INV-DISBURSE-${InvoiceCount + 1}`,
+      };
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          "x-app-key": app_key,
+          authorization: token,
+        },
+      };
+
+      const response = await axios.post(
+        `${baseURL}/checkout/payment/b2cPayment`,
+        requestData,
+        config
+      );
+      console.log({ response });
       return [response.data, null];
     } catch (error) {
       console.error("Error creating payment:", error);
