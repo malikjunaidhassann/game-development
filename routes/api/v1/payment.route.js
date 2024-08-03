@@ -18,6 +18,19 @@ router.post(
   PaymentController.updateStatus
 );
 
+router.get("/get-withdraw-requests", PaymentController.getWithdrawRequests);
+
+router.post(
+  "/withdraw-request",
+  [authorize(), validate(Validation.payment.withdrawRequest)],
+  PaymentController.withdrawRequest
+);
+
+router.post(
+  "/withdraw-approve/:userId",
+  [validate(Validation.payment.withdrawApprove)],
+  PaymentController.withdrawApprove
+);
 const paymentRoutes = router;
 
 export default paymentRoutes;

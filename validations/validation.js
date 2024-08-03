@@ -141,6 +141,25 @@ const Validation = {
         paymentID: Joi.string().required(),
       }),
     },
+    withdrawRequest: {
+      body: Joi.object({
+        amount: schema.string.required(),
+        walletId: schema.string.required(),
+        accountHolder: schema.string.required(),
+      }),
+    },
+    withdrawApprove: {
+      params: Joi.object({
+        userId: schema.string.required(),
+      }),
+      body: Joi.object({
+        withdrawId: schema.string.required(),
+        transactionId: schema.string.required(),
+        status: Joi.string()
+          .valid("completed", "cancelled", "pending")
+          .required(),
+      }),
+    },
   },
   game: {
     startGame: {
