@@ -1,15 +1,15 @@
-// cron.
 import cron from "node-cron";
 import { Tournament } from "../models/table.model.js";
 
 export const startCronJob = () => {
-  cron.schedule("0 * * * *", async () => {
+  cron.schedule("0 0 * * *", async () => {
     try {
+      const currentDate = new Date();
       const result = await Tournament.updateMany(
-        { endDate: { $lt: new Date() }, isExpired: false },
+        { endDate: { $lt: currentDate }, isExpired: false },
         { $set: { isExpired: true } }
       );
-      console.log(`Expired tournaments updated: ${result.nModified} documents modified`);
+      console.log(`Expired tournaments updated: ${result?.length} documents modified`);
     } catch (error) {
       console.error("Error updating expired tournaments:", error);
     }
