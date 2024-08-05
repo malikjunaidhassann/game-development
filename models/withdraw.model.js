@@ -1,42 +1,41 @@
 import mongoose from "mongoose";
 
-const paymentSchema = new mongoose.Schema(
+const withdrawSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
-    paymentID: {
+    amount: {
       type: String,
       required: true,
-      unique: true,
     },
-    amount: {
+    walletId: {
+      type: String,
+      required: true,
+    },
+    accountHolder: {
       type: String,
       required: true,
     },
     intent: {
       type: String,
-      required: true,
+      default: "withdraw",
     },
     currency: {
       default: "BDT",
       type: String,
-      required: true,
     },
-    paymentCreateTime: {
+    withdrawRequestTime: {
+      type: String,
+    },
+    transactionId: {
       type: String,
     },
     transactionStatus: {
       type: String,
-      enum: ["Initiated", "success", "failure", "cancel"],
-    },
-    merchantInvoiceNumber: {
-      type: String,
-    },
-    statusCode: {
-      type: String,
+      enum: ["pending", "completed", "failed", "cancelled"],
     },
     statusMessage: {
       type: String,
@@ -45,6 +44,6 @@ const paymentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Payment = mongoose.model("payment", paymentSchema);
+const Withdraw = mongoose.model("withdraw", withdrawSchema);
 
-export default Payment;
+export default Withdraw;
