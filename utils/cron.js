@@ -9,7 +9,7 @@ export const startCronJob = () => {
         { endDate: { $lt: currentDate }, isExpired: false },
         { $set: { isExpired: true } }
       );
-      console.log(`Expired tournaments updated: ${result.nModified} documents modified`);
+      console.log(`Expired tournaments updated: ${result?.length} documents modified`);
     } catch (error) {
       console.error("Error updating expired tournaments:", error);
     }
