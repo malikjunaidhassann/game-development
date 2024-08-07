@@ -2,27 +2,30 @@ import GameHistory from "../models/gameHistory.model.js";
 import { Tournament } from "../models/table.model.js";
 import mongoose from "mongoose";
 
-const TableController = {
-  async getAllTable(_, res) {
-    const table = await Tournament.find();
+const TournamentController = {
+  async getTournaments(_, res) {
+    const tournament = await Tournament.find().populate("tableId");
 
     return res.status(200).json({
       success: true,
-      data: table,
+      data: tournament,
     });
   },
   async createTournament(req, res) {
     const { name, startDate, endDate, tableId } = req.body;
 
-    const createdTornament = await Tournament.create({
+    let createdTournament = await Tournament.create({
       name,
       tableId,
       startDate,
       endDate,
     });
+
+    const populatedTournament = await Tournament.findById(createdTournament._id).populate("tableId").exec();
+
     return res.status(201).json({
       success: true,
-      data: createdTornament,
+      data: populatedTournament,
     });
   },
   async getTournamentResults(req, res) {
@@ -95,4 +98,4 @@ const TableController = {
   },
 };
 
-export default TableController;
+export default TournamentController;
