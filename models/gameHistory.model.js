@@ -12,6 +12,11 @@ const gameHistorySchema = new mongoose.Schema(
       ref: "Table",
       required: true,
     },
+    gameType: {
+      type: String,
+      enum: ["firstDiscoPool", "playCarrom", "freeStyle"],
+      required: true,
+    },
     gameStatus: {
       type: String,
       enum: ["in-progress", "no-result", "completed"],
