@@ -4,7 +4,7 @@ import User from "../models/user.model.js";
 const GameController = {
   async startGame(req, res) {
     const { _id: userId } = req.user;
-    const { tableId, gameCoins } = req.bodyValue;
+    const { tableId, gameCoins, gameType } = req.bodyValue;
 
     const user = await User.findOne({ _id: userId, isBlocked: false });
 
@@ -26,6 +26,7 @@ const GameController = {
       userId,
       tableId,
       gameCoins,
+      gameType,
       gameStatus: "in-progress",
     });
 
