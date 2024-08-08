@@ -45,9 +45,9 @@ const tournamentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tableId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Table",
+    gameType: {
+      type: String,
+      enum: ["firstDiscoPool", "playCarrom", "freeStyle"],
     },
     startDate: {
       type: Date,
