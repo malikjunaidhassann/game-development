@@ -7,7 +7,7 @@ import TableController from "../../../controllers/tournament.controller.js";
 const router = express.Router();
 
 router.get("/getTournaments", TableController.getTournaments);
-router.get("/getTournamentStats/:tournamentId", [authorize()], TableController.getTournamentResults);
+router.get("/getTournamentStats/:gamePlay", [authorize()], TableController.getTournamentResults);
 router.post("/createTournament", TableController.createTournament);
 
 const tournamentRoutes = router;

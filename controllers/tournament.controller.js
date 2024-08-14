@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const TournamentController = {
   async getTournaments(_, res) {
-    const tournament = await Tournament.find().populate("tableId");
+    const tournament = await Tournament.find();
 
     return res.status(200).json({
       success: true,
@@ -12,16 +12,16 @@ const TournamentController = {
     });
   },
   async createTournament(req, res) {
-    const { name, startDate, endDate, tableId } = req.body;
+    const { name, startDate, endDate, gameType } = req.body;
 
     let createdTournament = await Tournament.create({
       name,
-      tableId,
+      gameType,
       startDate,
       endDate,
     });
 
-    const populatedTournament = await Tournament.findById(createdTournament._id).populate("tableId").exec();
+    const populatedTournament = await Tournament.findById(createdTournament._id);
 
     return res.status(201).json({
       success: true,
@@ -30,21 +30,21 @@ const TournamentController = {
   },
   async getTournamentResults(req, res) {
     try {
-      const { tournamentId } = req.params;
+      const { gamePlay } = req.params;
+      console.log({ gamePlay });
 
-      const tournament = await Tournament.findById(tournamentId);
+      const tournament = await Tournament.findOne({ gameType: gamePlay });
       if (!tournament) {
         return res.status(404).json({ message: "Tournament not found" });
       }
 
-      const { startDate, endDate, tableId } = tournament;
-      const tableeId = new mongoose.Types.ObjectId(tableId);
+      const { startDate, endDate, gameType } = tournament;
+      console.log(tournament);
 
-      // Use aggregation pipeline to process the game histories
       const results = await GameHistory.aggregate([
         {
           $match: {
-            tableId: tableeId,
+            gameType: gameType,
             createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
             "gameResult.status": "win",
           },
@@ -81,15 +81,14 @@ const TournamentController = {
             _id: 0,
             userId: "$_id",
             user: {
-              name: "$user.userName", // Adjust field name according to your schema
+              name: "$user.userName",
             },
             wins: 1,
-            totalEarnings: 1, // Include total earnings in the result
+            totalEarnings: 1,
           },
         },
       ]);
 
-      console.log(results); // Log results for debugging
       res.json(results);
     } catch (error) {
       console.error(error);
