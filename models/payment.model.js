@@ -10,7 +10,7 @@ const paymentSchema = new mongoose.Schema(
     paymentID: {
       type: String,
       required: true,
-      // unique: true,
+      unique: true,
     },
     amount: {
       type: String,
