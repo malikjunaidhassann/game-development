@@ -50,14 +50,13 @@ const AuthController = {
     });
   },
   async googleSignIn(req, res) {
-    const { accessToken } = req.bodyValue;
+    const { email, given_name, family_name } = req.bodyValue;
 
-    console.log({ accessToken: accessToken });
-    const [data, error] = await GoogleService.verify({ accessToken });
+    // console.log({ accessToken: accessToken });
+    // const [data, error] = await GoogleService.verify({ accessToken });
 
     if (error) return res.status(400).json({ success: false, message: error?.message });
 
-    const { email, given_name, family_name } = data;
     let user = await User.findOne({ email, isDeleted: false });
 
     if (user) {
