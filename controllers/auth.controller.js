@@ -6,6 +6,7 @@ import User from "../models/user.model.js";
 import Admin from "../models/superAdmin.model.js";
 
 import s3Service from "../services/s3Service.js";
+import GoogleService from "../services/googlService.js";
 
 const AuthController = {
   async signUp(req, res) {
@@ -46,6 +47,40 @@ const AuthController = {
       token,
       data,
       message: "Account created successfully!",
+    });
+  },
+  async googleSignIn(req, res) {
+    const { accessToken } = req.bodyValue;
+    const [data, error] = await GoogleService.verify({ accessToken });
+
+    if (error) return res.status(400).json({ success: false, message: error?.message });
+
+    const { email, given_name, family_name } = data;
+    let user = await User.findOne({ email, isDeleted: false });
+
+    if (user) {
+      if (!user.isEmailVerified) {
+        user.isEmailVerified = true;
+        await user.save();
+      }
+    } else {
+      user = await User.create({
+        firstName: given_name,
+        lastName: family_name,
+        email,
+        isEmailVerified: true,
+      });
+    }
+
+    const token = JWT.sign({ _id: user._id });
+    const obj = user.toObject();
+    delete obj.password;
+
+    return res.status(200).json({
+      success: true,
+      token,
+      user: obj,
+      message: user ? "Login successful!" : "Account created successfully!",
     });
   },
   async verifyEmail(req, res) {
@@ -99,7 +134,9 @@ const AuthController = {
 
   async signIn(req, res) {
     const { email, password } = req.body;
-    const user = await User.findOne({ email, isDeleted: false }).select("+password").select("+isEmailVerified");
+    const user = await User.findOne({ email, isDeleted: false })
+      .select("+password")
+      .select("+isEmailVerified");
 
     if (!user) {
       return res.status(404).json({ success: false, message: "User Does Not Exist." });
