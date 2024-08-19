@@ -7,6 +7,9 @@ import Admin from "../models/superAdmin.model.js";
 
 import s3Service from "../services/s3Service.js";
 import GoogleService from "../services/googlService.js";
+import GameHistory from "../models/gameHistory.model.js";
+import mongoose from "mongoose";
+import { TournamentResult } from "../models/table.model.js";
 
 const AuthController = {
   async signUp(req, res) {
@@ -126,7 +129,6 @@ const AuthController = {
       user: data,
     });
   },
-
   async signIn(req, res) {
     const { email, password } = req.body;
     const user = await User.findOne({ email, isDeleted: false })
@@ -152,7 +154,6 @@ const AuthController = {
       user: data,
     });
   },
-
   async forgotPassword(req, res) {
     const { email } = req.body;
     const user = await User.findOne({ email, isDeleted: false });
@@ -177,7 +178,6 @@ const AuthController = {
       message: "Email Sent to Recover Password",
     });
   },
-
   async resetPassword(req, res) {
     const { email, password, resetCode } = req.body;
     const user = await User.findOne({ email, isDeleted: false });
@@ -199,7 +199,6 @@ const AuthController = {
       message: "Password Reset Successfully",
     });
   },
-
   async getCarromUser(req, res) {
     const data = await User.find();
     return res.status(200).json({
@@ -207,7 +206,6 @@ const AuthController = {
       data,
     });
   },
-
   async blockUser(req, res) {
     const { userId } = req.params;
     const user = await User.findById(userId);
@@ -227,6 +225,73 @@ const AuthController = {
       success: true,
       message: `User with userName ${user.userName} has been ${user.isBlocked ? "unblocked" : "blocked"}.`,
       data,
+    });
+  },
+  async getUserStats(req, res) {
+    const { _id } = req.user;
+
+    const firstDiscoPoolStats = await GameHistory.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(_id), gameType: "firstDiscoPool" } },
+      {
+        $group: {
+          _id: null,
+          totalGames: { $sum: 1 },
+          wins: { $sum: { $cond: [{ $eq: ["$gameResult.status", "win"] }, 1, 0] } },
+        },
+      },
+    ]);
+
+    const playCarromStats = await GameHistory.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(_id), gameType: "playCarrom" } },
+      {
+        $group: {
+          _id: null,
+          totalGames: { $sum: 1 },
+          wins: { $sum: { $cond: [{ $eq: ["$gameResult.status", "win"] }, 1, 0] } },
+        },
+      },
+    ]);
+
+    const gameTypes = ["firstDiscoPool", "playCarrom"];
+
+    const userStats = {
+      firstDiscoPool: { tournamentsWon: 0 },
+      playCarrom: { tournamentsWon: 0 },
+    };
+
+    for (const gameType of gameTypes) {
+      const tournamentsWon = await TournamentResult.aggregate([
+        { $unwind: "$results" },
+        {
+          $match: {
+            "results.userId": new mongoose.Types.ObjectId(_id),
+            "results.rank": { $lte: 10 },
+            "results.gameType": gameType,
+          },
+        },
+        { $count: "tournamentsWon" },
+      ]);
+
+      console.log({ tournamentsWon: tournamentsWon });
+
+      userStats[gameType].tournamentsWon = tournamentsWon[0]?.tournamentsWon || 0;
+    }
+
+    const response = {
+      firstDiscoPool: {
+        totalGames: firstDiscoPoolStats[0]?.totalGames || 0,
+        wins: firstDiscoPoolStats[0]?.wins || 0,
+      },
+      playCarrom: {
+        totalGames: playCarromStats[0]?.totalGames || 0,
+        wins: playCarromStats[0]?.wins || 0,
+      },
+      tournamentStats: userStats,
+    };
+
+    res.status(200).json({
+      success: true,
+      data: response,
     });
   },
 };

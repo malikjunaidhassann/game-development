@@ -162,6 +162,7 @@ const TournamentController = {
       const tournamentResult = {
         tournamentId: updatedTournament._id,
         tournamentName: updatedTournament.name,
+
         results: results.map((result, index) => {
           let prize = 0;
           if (index === 0) {
@@ -181,6 +182,7 @@ const TournamentController = {
             prize: prize,
             wins: result.wins,
             totalEarnings: result.totalEarnings,
+            gameType: updatedTournament.gameType,
           };
         }),
       };
@@ -209,7 +211,6 @@ const TournamentController = {
       }
 
       const { startDate, endDate, gameType } = tournament;
-      console.log(tournament);
 
       const results = await GameHistory.aggregate([
         {
@@ -285,7 +286,7 @@ const TournamentController = {
 
     res.status(200).json({
       success: true,
-      data: tournamentRsesult,
+      data: tournamentResult,
     });
   },
   async addTournamentWinning(req, res) {

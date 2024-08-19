@@ -29,6 +29,8 @@ router.post("/reset-password", [validate(Validation.auth.resetPassword)], AuthCo
 
 router.post("/admin-signIn", [validate(Validation.auth.signIn)], AuthController.superAdminSignIn);
 
+router.get("/get-user-stats", [authorize()], AuthController.getUserStats);
+
 const authRoutes = router;
 
 export default authRoutes;

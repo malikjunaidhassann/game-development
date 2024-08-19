@@ -123,6 +123,10 @@ const tournamentResultSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        gameType: {
+          type: String,
+          enum: ["firstDiscoPool", "playCarrom", "freeStyle"],
+        },
       },
     ],
   },
