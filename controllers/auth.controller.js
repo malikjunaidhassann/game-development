@@ -50,14 +50,8 @@ const AuthController = {
     });
   },
   async googleSignIn(req, res) {
-    const { accessToken } = req.bodyValue;
+    const { email } = req.bodyValue;
 
-    console.log({ accessToken: accessToken });
-    const [data, error] = await GoogleService.verify({ accessToken });
-
-    if (error) return res.status(400).json({ success: false, message: error?.message });
-
-    const { email, given_name, family_name } = data;
     let user = await User.findOne({ email, isDeleted: false });
 
     if (user) {
@@ -67,9 +61,8 @@ const AuthController = {
       }
     } else {
       user = await User.create({
-        firstName: given_name,
-        lastName: family_name,
         email,
+        userName: email,
         isEmailVerified: true,
       });
     }

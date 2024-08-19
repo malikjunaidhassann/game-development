@@ -87,7 +87,7 @@ const Validation = {
     },
     googleSignUp: {
       body: Joi.object({
-        accessToken: schema.string,
+        email: schema.email,
       }),
     },
   },
