@@ -14,7 +14,7 @@ router.post(
 
 router.post(
   "/update-status",
-  [authorize(), validate(Validation.payment.updateStatus)],
+  [validate(Validation.payment.updateStatus)],
   PaymentController.updateStatus
 );
 
