@@ -72,19 +72,12 @@ const PaymentController = {
   },
 
   async updateStatus(req, res) {
-    const { _id: userId } = req.user;
     const { status, paymentID } = req.bodyValue;
 
-    const user = await User.findOne({ _id: userId });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: `User Not Found`,
-      });
-    }
-
-    const payment = await Payment.findOne({ userId, paymentID });
+    const payment = await Payment.findOne({
+      paymentID,
+      transactionStatus: { $eq: "Initiated" },
+    });
 
     if (!payment) {
       return res
@@ -92,8 +85,10 @@ const PaymentController = {
         .json({ success: false, message: "Payment not Found" });
     }
 
+    const user = await User.findOne({ _id: payment.userId, isBlocked: false });
+
     if (status === "success") {
-      user.coins = user.coins + payment.amount;
+      user.coins = Number(user.coins) + Number(payment.amount);
       await user.save();
     }
 
