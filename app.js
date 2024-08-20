@@ -19,6 +19,7 @@ import IP from "./utils/ip.util.js";
 const app = express();
 
 // const { originWhitelist } = config;
+
 const originWhitelist = ["https://realbdgame.com/", "https://payment-backend-dashboard.netlify.app/"];
 
 const corsOptions = {
