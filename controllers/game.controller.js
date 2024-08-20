@@ -1,5 +1,5 @@
 import GameHistory from "../models/gameHistory.model.js";
-import User from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 
 const GameController = {
   async startGame(req, res) {

@@ -2,7 +2,7 @@ import JWT from "../utils/jwt.util.js";
 import Nano from "../utils/nano.util.js";
 import Mailer from "../utils/mailer.util.js";
 import Bcrypt from "../utils/bcrypt.util.js";
-import User from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import Admin from "../models/superAdmin.model.js";
 
 import s3Service from "../services/s3Service.js";

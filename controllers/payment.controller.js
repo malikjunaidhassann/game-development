@@ -1,5 +1,5 @@
 import Payment from "../models/payment.model.js";
-import User from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import Withdraw from "../models/withdraw.model.js";
 import bKashService from "../services/bKashService.js";
 
@@ -59,9 +59,7 @@ const PaymentController = {
     });
 
     if (!payment) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Payment not Created in Database" });
+      return res.status(404).json({ success: false, message: "Payment not Created in Database" });
     }
 
     return res.status(201).json({
@@ -87,9 +85,7 @@ const PaymentController = {
     const payment = await Payment.findOne({ userId, paymentID });
 
     if (!payment) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Payment not Found" });
+      return res.status(404).json({ success: false, message: "Payment not Found" });
     }
 
     if (status === "success") {
@@ -115,8 +111,7 @@ const PaymentController = {
       Withdraw.find({ transactionStatus: "cancelled" }).exec(),
     ];
 
-    const [pendingWithdraws, completedWithdraws, cancelledWithdraws] =
-      await Promise.all(promises);
+    const [pendingWithdraws, completedWithdraws, cancelledWithdraws] = await Promise.all(promises);
 
     return res.status(200).json({
       pendingWithdraws,
