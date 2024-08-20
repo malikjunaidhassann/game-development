@@ -59,6 +59,7 @@ const Validation = {
         // "profile-image": schema.profilePicture,
       }),
     },
+
     signIn: {
       body: Joi.object({
         email: schema.email,
@@ -91,7 +92,15 @@ const Validation = {
       }),
     },
   },
-
+  friend: {
+    sendRequest: Joi.object({
+      senderId: schema.string,
+      receiverId: schema.string,
+    }),
+    acceptRequest: Joi.object({
+      requestId: schema.string,
+    }),
+  },
   table: {
     create: {
       body: Joi.object({
