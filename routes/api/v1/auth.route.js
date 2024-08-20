@@ -22,11 +22,14 @@ router.post(
 );
 
 router.post("/sign-in", [validate(Validation.auth.signIn)], AuthController.signIn);
+router.post("/google-sign-in", [validate(Validation.auth.googleSignUp)], AuthController.googleSignIn);
 
 router.post("/forgot-password", [validate(Validation.auth.forgotPassword)], AuthController.forgotPassword);
 router.post("/reset-password", [validate(Validation.auth.resetPassword)], AuthController.resetPassword);
 
 router.post("/admin-signIn", [validate(Validation.auth.signIn)], AuthController.superAdminSignIn);
+
+router.get("/get-user-stats", [authorize()], AuthController.getUserStats);
 
 const authRoutes = router;
 

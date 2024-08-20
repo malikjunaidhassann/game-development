@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema(
   {
     userName: {
       type: String,
-      required: true,
       unique: true,
     },
     email: {
@@ -26,6 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     coins: {
       type: String,
+      default: 0,
     },
     isBlocked: {
       type: Boolean,
@@ -40,10 +40,39 @@ const userSchema = new mongoose.Schema(
       default: false,
       select: false,
     },
+    friends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user", // Use lowercase "user" here
+      },
+    ],
   },
   { timestamps: true }
 );
 
 const User = mongoose.model("user", userSchema);
 
-export default User;
+const friendRequestSchema = new mongoose.Schema(
+  {
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "accepted", "declined"],
+      default: "pending",
+    },
+  },
+  { timestamps: true }
+);
+
+const FriendRequest = mongoose.model("friendRequest", friendRequestSchema);
+
+export { User, FriendRequest };

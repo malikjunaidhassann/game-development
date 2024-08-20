@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
-import User from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import Admin from "../models/superAdmin.model.js";
 
 const jwtSecret = config.jwtSecret;
