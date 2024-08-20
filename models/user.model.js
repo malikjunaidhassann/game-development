@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema(
     },
     coins: {
       type: String,
+      default: 0,
     },
     isBlocked: {
       type: Boolean,
