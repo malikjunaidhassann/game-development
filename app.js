@@ -8,6 +8,7 @@ import cors from "cors";
 import morgan from "morgan";
 import { fileURLToPath } from "url";
 import compression from "compression";
+import { exec } from "child_process";
 
 import config from "./config.js";
 import apiRoutes from "./routes/api.routes.js";
@@ -18,7 +19,7 @@ import IP from "./utils/ip.util.js";
 const app = express();
 
 // const { originWhitelist } = config;
-const originWhitelist = ["https://realbdgame.com/", "http://localhost:3000"];
+const originWhitelist = ["https://realbdgame.com/", "https://payment-backend-dashboard.netlify.app/"];
 
 const corsOptions = {
   optionsSuccessStatus: 200,
@@ -83,6 +84,25 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", apiRoutes);
+app.post("/open-app", (req, res) => {
+  const { packageName } = req.body;
+
+  exec(
+    `adb shell monkey -p ${packageName} -c android.intent.category.LAUNCHER 1`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error opening app: ${error.message}`);
+        return res.status(500).json({ error: error.message });
+      }
+      if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return res.status(500).json({ error: stderr });
+      }
+      console.log(`App opened: ${stdout}`);
+      res.json({ message: "App opened successfully" });
+    }
+  );
+});
 
 app.use((_req, res) => res.status(404).json({ success: false, message: "Route Not Found" }));
 
