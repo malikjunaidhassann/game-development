@@ -18,13 +18,16 @@ import IP from "./utils/ip.util.js";
 const app = express();
 
 // const { originWhitelist } = config;
-const originWhitelist = "https://realbdgame.com/";
+const originWhitelist = ["https://realbdgame.com/", "http://localhost:3000"];
 
 const corsOptions = {
   optionsSuccessStatus: 200,
   origin: (origin, callback) => {
-    if (originWhitelist.indexOf(origin) !== -1 || !origin) callback(null, true);
-    else callback(new Error("Not allowed by CORS"));
+    if (originWhitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
   },
 };
 const compressionOptions = {
