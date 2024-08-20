@@ -252,11 +252,23 @@ const AuthController = {
       },
     ]);
 
-    const gameTypes = ["firstDiscoPool", "playCarrom"];
+    const freeStyleStats = await GameHistory.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(_id), gameType: "freeStyle" } },
+      {
+        $group: {
+          _id: null,
+          totalGames: { $sum: 1 },
+          wins: { $sum: { $cond: [{ $eq: ["$gameResult.status", "win"] }, 1, 0] } },
+        },
+      },
+    ]);
+
+    const gameTypes = ["firstDiscoPool", "playCarrom", "freeStyle"];
 
     const userStats = {
       firstDiscoPool: { tournamentsWon: 0 },
       playCarrom: { tournamentsWon: 0 },
+      freeStyle: { tournamentsWon: 0 },
     };
 
     for (const gameType of gameTypes) {
@@ -285,6 +297,10 @@ const AuthController = {
       playCarrom: {
         totalGames: playCarromStats[0]?.totalGames || 0,
         wins: playCarromStats[0]?.wins || 0,
+      },
+      freeStyleStats: {
+        totalGames: freeStyleStats[0]?.totalGames || 0,
+        wins: freeStyleStats[0]?.wins || 0,
       },
       tournamentStats: userStats,
     };
