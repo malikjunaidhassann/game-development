@@ -21,6 +21,8 @@ router.post(
   AuthController.verifyEmail
 );
 
+router.get("/get-user", [authorize()], AuthController.getUser);
+
 router.post("/sign-in", [validate(Validation.auth.signIn)], AuthController.signIn);
 router.post("/google-sign-in", [validate(Validation.auth.googleSignUp)], AuthController.googleSignIn);
 
