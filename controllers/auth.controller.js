@@ -106,6 +106,17 @@ const AuthController = {
       message: "Email successfully verified.",
     });
   },
+  async getUser(req, res) {
+    const { _id } = req.user;
+    const user = await User.findOne({ _id, isDeleted: false });
+
+    if (!user) return res.status(404).json({ success: false, message: "user does not exists." });
+
+    return res.status(200).json({
+      success: true,
+      user: user,
+    });
+  },
   async superAdminSignIn(req, res) {
     const { email, password } = req.body;
     const user = await Admin.findOne({ email }).select("+password");
