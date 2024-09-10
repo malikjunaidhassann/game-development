@@ -18,7 +18,7 @@ const config = {
   appUrl: process.env.APP_URL,
   baseUrl: process.env.BASE_URL,
 
-  baseURL: process.env.BASE_URL,
+  bkash_url: process.env.BKASH_URL,
   bkash_user: process.env.BKASH_USER,
   bkash_password: process.env.BKASH_PASSWORD,
   app_key: process.env.APP_KEY,

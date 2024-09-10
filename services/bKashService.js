@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "../config.js";
 
 const {
-  baseURL,
+  bkash_url,
   bkash_user,
   bkash_password,
   app_key,
@@ -27,7 +27,7 @@ const bKashService = {
         },
       };
       const response = await axios.post(
-        `${baseURL}/tokenized/checkout/token/grant`,
+        `${bkash_url}/tokenized/checkout/token/grant`,
         requestData,
         config
       );
@@ -68,7 +68,7 @@ const bKashService = {
       };
 
       const response = await axios.post(
-        `${baseURL}/tokenized/checkout/create`,
+        `${bkash_url}/tokenized/checkout/create`,
         requestData,
         config
       );
@@ -90,7 +90,7 @@ const bKashService = {
       };
 
       const response = await axios.get(
-        `${baseURL}/checkout/payment/organizationBalance`,
+        `${bkash_url}/checkout/payment/organizationBalance`,
         config
       );
 
@@ -126,7 +126,7 @@ const bKashService = {
       };
 
       const response = await axios.post(
-        `${baseURL}/checkout/payment/b2cPayment`,
+        `${bkash_url}/checkout/payment/b2cPayment`,
         requestData,
         config
       );
